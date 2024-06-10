@@ -1,0 +1,41 @@
+apiVersion: argoproj.io/v1alpha1
+kind: CronWorkflow
+metadata:
+  name: shopify-importer-cron
+spec:
+  schedule: "*/10 * * * *"
+  timezone: "UTC"
+  concurrencyPolicy: "Replace"
+  startingDeadlineSeconds: 0
+  successfulJobsHistoryLimit: 3
+  failedJobsHistoryLimit: 1
+  workflowSpec:
+    entrypoint: shopify-importer
+    templates:
+    - name: shopify-importer
+      container:
+        image: your-dockerhub-username/your-app:latest
+        imagePullPolicy: Always
+        resources:
+          limits:
+            memory: "512Mi"
+            cpu: "500m"
+          requests:
+            memory: "256Mi"
+            cpu: "250m"
+        env:
+        - name: SHOPIFY_API_KEY
+          valueFrom:
+            secretKeyRef:
+              name: shopify-secrets
+              key: SHOPIFY_API_KEY
+        - name: SHOPIFY_API_SECRET
+          valueFrom:
+            secretKeyRef:
+              name: shopify-secrets
+              key: SHOPIFY_API_SECRET
+        - name: ACCESS_TOKEN
+          valueFrom:
+            secretKeyRef:
+              name: shopify-secrets
+              key: ACCESS_TOKEN
