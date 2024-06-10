@@ -14,7 +14,7 @@ spec:
     templates:
     - name: shopify-importer
       container:
-        image: your-dockerhub-username/your-app:latest
+        image: mrt192/shopify-importer:latest
         imagePullPolicy: Always
         resources:
           limits:
